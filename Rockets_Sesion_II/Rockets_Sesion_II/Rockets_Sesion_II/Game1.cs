@@ -422,10 +422,9 @@ namespace Rockets_Sesion_II
             List<Smoke> particlesToDelete = new List<Smoke>();
             foreach (var particle in smokeParticles)
             {
-                spriteBatch.Draw(smokeTexture, particle.Position, null, Color.White, 0, new Vector2(40, 35), 0.2f,
+                spriteBatch.Draw(smokeTexture, particle.Position, null, particle.Color, 0, new Vector2(40, 35), 0.2f,
                                  SpriteEffects.None, 1);
-                particle.TimesRemaining--;
-                if (particle.TimesRemaining == 0)
+                if (particle.ShouldBeDeleted())
                     particlesToDelete.Add(particle);
             }
 
