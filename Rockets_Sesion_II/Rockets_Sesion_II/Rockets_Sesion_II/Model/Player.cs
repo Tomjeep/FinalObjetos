@@ -11,11 +11,7 @@ namespace Rockets_Sesion_II.Model
     /// DTO that will contain information regrading a user in the game
     /// </summary>
     public class Player : BaseDTO
-    {
-        /// <summary>
-        /// Store position of rocket cannon and base (x,y)
-        /// </summary>
-        public Vector2 Position { get; set; }
+    {        
         /// <summary>
         /// Will indicate status of the current player
         /// </summary>

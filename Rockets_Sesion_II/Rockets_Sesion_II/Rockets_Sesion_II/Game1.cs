@@ -51,7 +51,7 @@ namespace Rockets_Sesion_II
         float rocketAngle;
 
         // Ulacit: Smoke elements
-        List<Vector2> smokeParticles = new List<Vector2>(); // Ulacit: store all existing smoke particles
+        List<Smoke> smokeParticles = new List<Smoke>(); // Ulacit: store all existing smoke particles
         Random smokeRandomizer = new Random(); // generate a smoke particle at a random position
 
         // Ulacit: Cannon Sound Effect
@@ -146,14 +146,16 @@ namespace Rockets_Sesion_II
             // Ulacit: Update rcoket position.
             UpdateRocketAngle();
 
-
-            // Ulacit: Add Smoke
-            for (int i = 0; i < 2; i++)
+            if (rocketIsFlying)
             {
-                Vector2 smokePos = rocketPosition; // Ulacit: Current Rocket Position
-                smokePos.X += smokeRandomizer.Next(10) - 5;
-                smokePos.Y += smokeRandomizer.Next(10) - 5;
-                smokeParticles.Add(smokePos);
+                // Ulacit: Add Smoke
+                for (int i = 0; i < 2; i++)
+                {
+                    Vector2 smokePos = rocketPosition; // Ulacit: Current Rocket Position
+                    smokePos.X += smokeRandomizer.Next(10) - 5;
+                    smokePos.Y += smokeRandomizer.Next(10) - 5;
+                    smokeParticles.Add(new Smoke(smokePos));
+                }
             }
 
             #endregion
@@ -228,7 +230,7 @@ namespace Rockets_Sesion_II
                 // so we pass the angle and Math Helper transform it to Radians.
                 // cannon image is horizontal, so we hae to rotate it 90 degrees (just for start)
                 players[i].Angle = MathHelper.ToRadians(90); // 0 to 180
-                players[i].Power = 100; // defualt power
+                players[i].Power = 500; // defualt power
             }
 
             // Setup positions on initial Level
@@ -417,8 +419,20 @@ namespace Rockets_Sesion_II
         /// </summary>
         void DrawSmoke()
         {
+            List<Smoke> particlesToDelete = new List<Smoke>();
             foreach (var particle in smokeParticles)
-                spriteBatch.Draw(smokeTexture, particle, null, Color.White, 0, new Vector2(40, 35), 0.2f, SpriteEffects.None, 1);
+            {
+                spriteBatch.Draw(smokeTexture, particle.Position, null, Color.White, 0, new Vector2(40, 35), 0.2f,
+                                 SpriteEffects.None, 1);
+                particle.TimesRemaining--;
+                if (particle.TimesRemaining == 0)
+                    particlesToDelete.Add(particle);
+            }
+
+            foreach (var particle in particlesToDelete)
+            {
+                smokeParticles.Remove(particle);
+            }
         }
 
         #endregion
