@@ -139,8 +139,10 @@ namespace Rockets_Sesion_II
 
             #region Ulacit - Game Logic
             // Ulacit: Our Custom Method to rotate the canon of the player in focus
-            ReadKeyboard();
-
+            if (!rocketIsFlying)
+            {
+                ReadKeyboard();
+            }
             // Ulacit: Update rcoket position.
             UpdateRocketAngle();
 
@@ -385,8 +387,29 @@ namespace Rockets_Sesion_II
                 rocketPosition += rocketDirection;
                 // Ulacit: lets change the angle when flying
                 rocketAngle = (float)Math.Atan2(rocketDirection.X, -rocketDirection.Y);
+
+                if (RocketOutOfBounds(rocketPosition))
+                {
+                    rocketIsFlying = false;
+                    currentPlayer = (currentPlayer + 1) % numberOfPlayers; //Calculates the next player shooting
+                }
+
             }
         }
+
+
+        /// <summary>
+        /// Checks if the rocket has gone out of the playing area
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        private bool RocketOutOfBounds(Vector2 position)
+        {
+            if (position.X < 0 || position.X > gameWidth || position.Y > gameHeight)
+                return true;
+            return false;
+        }
+
 
         /// <summary>
         /// Ulacit: This draw smoke from the soke list. Since everytime on the draw() method, clearDevice is swapping out the screen,
