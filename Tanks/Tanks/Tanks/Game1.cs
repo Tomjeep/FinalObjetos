@@ -27,6 +27,7 @@ namespace Tanks
         private Texture2D bgTexture;
 
         private TerrainCell [,] gameMatrix;
+        private Player[] players;
 
         public Game1()
         {
@@ -54,6 +55,8 @@ namespace Tanks
             //Initialize data structure
 
             gameMatrix = new TerrainCell[100,100];
+
+            InitializePlayers();
 
             base.Initialize();
         }
@@ -117,6 +120,35 @@ namespace Tanks
 
             base.Draw(gameTime);
         }
+
+
+        #region players data
+
+        private void InitializePlayers()
+        {
+            Random ran = new Random();
+            players = new Player[2];
+            players [0] = new Player()
+                              {
+                                  Row = 0,
+                                  Column = 0,
+                                  Color = new Color(
+                                      ran.Next(0,255),
+                                      ran.Next(0, 255),
+                                      ran.Next(0, 255))
+                              };
+            players[1] = new Player()
+                             {
+                                 Row = 99,
+                                 Column = 99,
+                                 Color = new Color(
+                                     ran.Next(0, 255),
+                                     ran.Next(0, 255),
+                                     ran.Next(0, 255))
+                             };
+        }
+
+        #endregion
 
 
         /// <summary>
