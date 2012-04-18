@@ -19,6 +19,12 @@ namespace Tanks
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+
+        private int screenHeight;
+        private int screenWidth;
+
+        private Texture2D bgTexture;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -34,6 +40,13 @@ namespace Tanks
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.IsFullScreen = false;
+            graphics.ApplyChanges();
+            Window.Title = "Tanks";
+
 
             base.Initialize();
         }
@@ -48,6 +61,11 @@ namespace Tanks
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            bgTexture = Content.Load<Texture2D>("BACKGROUND");
+
+            screenHeight = graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
+            screenWidth = graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
+
         }
 
         /// <summary>
@@ -84,8 +102,24 @@ namespace Tanks
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+
+            DrawScenery();
+
+            spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+
+        /// <summary>
+        /// Draws game background
+        /// </summary>
+        private void DrawScenery()
+        {
+            var screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
+
+            spriteBatch.Draw(bgTexture, screenRectangle, Color.White);
         }
     }
 }
