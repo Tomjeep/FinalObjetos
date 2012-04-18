@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Tanks.Model;
 
 namespace Tanks
 {
@@ -24,6 +25,8 @@ namespace Tanks
         private int screenWidth;
 
         private Texture2D bgTexture;
+
+        private TerrainCell [,] gameMatrix;
 
         public Game1()
         {
@@ -47,6 +50,10 @@ namespace Tanks
             graphics.ApplyChanges();
             Window.Title = "Tanks";
 
+
+            //Initialize data structure
+
+            gameMatrix = new TerrainCell[100,100];
 
             base.Initialize();
         }
