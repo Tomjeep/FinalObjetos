@@ -25,6 +25,7 @@ namespace Tanks
         private int screenWidth;
 
         private Texture2D bgTexture;
+        private Texture2D tankTexture;
 
         private TerrainCell [,] gameMatrix;
         private Player[] players;
@@ -72,6 +73,7 @@ namespace Tanks
 
             // TODO: use this.Content to load your game content here
             bgTexture = Content.Load<Texture2D>("BACKGROUND");
+            tankTexture = Content.Load<Texture2D>("Tank");
 
             screenHeight = graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
             screenWidth = graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -115,6 +117,7 @@ namespace Tanks
             spriteBatch.Begin();
 
             DrawScenery();
+            DrawPlayers();
 
             spriteBatch.End();
 
@@ -122,7 +125,7 @@ namespace Tanks
         }
 
 
-        #region players data
+        #region players methods
 
         private void InitializePlayers()
         {
@@ -146,6 +149,15 @@ namespace Tanks
                                      ran.Next(0, 255),
                                      ran.Next(0, 255))
                              };
+        }
+
+
+        private void DrawPlayers()
+        {
+            foreach (var player in players)
+            {
+                spriteBatch.Draw(tankTexture, new Vector2(player.Row, player.Column), null, player.Color);
+            }
         }
 
         #endregion
