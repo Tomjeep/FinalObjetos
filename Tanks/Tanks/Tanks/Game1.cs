@@ -105,6 +105,8 @@ namespace Tanks
 
             // TODO: Add your update logic here
 
+            ReadKeyboard();
+
             base.Update(gameTime);
         }
 
@@ -138,6 +140,7 @@ namespace Tanks
                               {
                                   Row = 0,
                                   Column = 0,
+                                  Direction = DataTypes.Direction.Down,
                                   Color = new Color(
                                       ran.Next(0,255),
                                       ran.Next(0, 255),
@@ -147,6 +150,7 @@ namespace Tanks
                              {
                                  Row = 19,
                                  Column = 19,
+                                 Direction = DataTypes.Direction.Up,
                                  Color = new Color(
                                      ran.Next(0, 255),
                                      ran.Next(0, 255),
@@ -159,10 +163,51 @@ namespace Tanks
         {
             foreach (var player in players)
             {
-                printCell(tankTexture, player.Row, player.Column, player.Color);
+                PrintCell(tankTexture, player.Row, player.Column, player.Color, (int)player.Direction);
             }
 
             
+        }
+
+        private void ReadKeyboard()
+        {
+            // Get current state of the keyboard
+            KeyboardState state = Keyboard.GetState();
+            if (state.IsKeyDown(Keys.Left))
+            {
+                players[0].Direction = DataTypes.Direction.Left;                
+            }
+            if (state.IsKeyDown(Keys.Up))
+            {
+                players[0].Direction = DataTypes.Direction.Up;
+            }
+            if (state.IsKeyDown(Keys.Right))
+            {
+                players[0].Direction = DataTypes.Direction.Right;                
+            }
+            if (state.IsKeyDown(Keys.Down))
+            {
+                players[0].Direction = DataTypes.Direction.Down;
+            }
+
+
+
+            if (state.IsKeyDown(Keys.A))
+            {
+                players[1].Direction = DataTypes.Direction.Left;
+            }
+            if (state.IsKeyDown(Keys.W))
+            {
+                players[1].Direction = DataTypes.Direction.Up;
+            }
+            if (state.IsKeyDown(Keys.D))
+            {
+                players[1].Direction = DataTypes.Direction.Right;                
+            }
+            if (state.IsKeyDown(Keys.S))
+            {
+                players[1].Direction = DataTypes.Direction.Down;
+            }
         }
 
         #endregion
@@ -183,9 +228,11 @@ namespace Tanks
         #region general methods
 
 
-        private void printCell(Texture2D texture, int row, int column, Color color)
+        private void PrintCell(Texture2D texture, int row, int column, Color color, int angle = 0)
         {
-            spriteBatch.Draw(texture, new Vector2(column * imagesRatio, row * imagesRatio), null, color, 0, new Vector2(0, 0), imagesRatio / 100, SpriteEffects.None, 1);
+            float rotation = MathHelper.ToRadians(angle);
+            float imageCenter = texture.Height/2;            
+            spriteBatch.Draw(texture, new Vector2(column * imagesRatio + imagesRatio /2 , row * imagesRatio + imagesRatio /2), null, color, rotation, new Vector2(imageCenter, imageCenter), imagesRatio / 100, SpriteEffects.None, 1);
         }
 
         #endregion
