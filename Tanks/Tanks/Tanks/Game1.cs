@@ -27,6 +27,8 @@ namespace Tanks
         private Texture2D bgTexture;
         private Texture2D tankTexture;
 
+
+        private float imagesRatio; //images size
         private TerrainCell [,] gameMatrix;
         private Player[] players;
 
@@ -55,7 +57,8 @@ namespace Tanks
 
             //Initialize data structure
 
-            gameMatrix = new TerrainCell[100,100];
+            gameMatrix = new TerrainCell[20,20];
+            imagesRatio = 30;
 
             InitializePlayers();
 
@@ -142,8 +145,8 @@ namespace Tanks
                               };
             players[1] = new Player()
                              {
-                                 Row = 99,
-                                 Column = 99,
+                                 Row = 19,
+                                 Column = 19,
                                  Color = new Color(
                                      ran.Next(0, 255),
                                      ran.Next(0, 255),
@@ -156,8 +159,10 @@ namespace Tanks
         {
             foreach (var player in players)
             {
-                spriteBatch.Draw(tankTexture, new Vector2(player.Row, player.Column), null, player.Color);
+                printCell(tankTexture, player.Row, player.Column, player.Color);
             }
+
+            
         }
 
         #endregion
@@ -171,6 +176,18 @@ namespace Tanks
             var screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
 
             spriteBatch.Draw(bgTexture, screenRectangle, Color.White);
+            
         }
+
+
+        #region general methods
+
+
+        private void printCell(Texture2D texture, int row, int column, Color color)
+        {
+            spriteBatch.Draw(texture, new Vector2(column * imagesRatio, row * imagesRatio), null, color, 0, new Vector2(0, 0), imagesRatio / 100, SpriteEffects.None, 1);
+        }
+
+        #endregion
     }
 }
