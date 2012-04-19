@@ -12,11 +12,23 @@ namespace Tanks.Model
         
         private float rowMovement;
 
+        private int row;
+
+        private int column;
+
         private DataTypes.Direction direction;
 
-        public int Row { get; set; }
+        public int Row
+        {
+            get { return row; }
+            set { rowMovement = row = value; }
+        }
 
-        public int Column { get; set; }
+        public int Column
+        {
+            get { return column; }
+            set { columnMovement = column = value; }
+        }
 
         public Color Color { get; set; }
 
@@ -47,8 +59,8 @@ namespace Tanks.Model
 
         private void EvaluatePlayerMovement()
         {
-            Row = Convert.ToInt32(rowMovement);
-            Column = Convert.ToInt32(columnMovement);
+            row = Convert.ToInt32(rowMovement);
+            column = Convert.ToInt32(columnMovement);
         }
     }
 }
