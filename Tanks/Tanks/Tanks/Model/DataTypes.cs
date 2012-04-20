@@ -15,5 +15,10 @@ namespace Tanks.Model
             Up = 180
 
         }
+
+        public enum CellType
+        {
+            Trees, Stone, Player
+        }
     }
 }

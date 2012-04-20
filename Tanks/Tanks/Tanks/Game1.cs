@@ -20,7 +20,7 @@ namespace Tanks
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-
+        Random randomizer;
         private int screenHeight;
         private int screenWidth;
 
@@ -55,12 +55,16 @@ namespace Tanks
             graphics.ApplyChanges();
             Window.Title = "Tanks";
 
+            randomizer = new Random();
+
 
             //Initialize data structure
             matrixLastCell = 19;
             gameMatrix = new TerrainCell[matrixLastCell+1,matrixLastCell+1];
             imagesRatio = 30;
+            
 
+            GenerateTerrain();
             InitializePlayers();
 
             base.Initialize();
@@ -81,7 +85,6 @@ namespace Tanks
 
             screenHeight = graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
             screenWidth = graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
-
         }
 
         /// <summary>
@@ -123,6 +126,7 @@ namespace Tanks
             spriteBatch.Begin();
 
             DrawScenery();
+            DrawTerrain();
             DrawPlayers();
 
             spriteBatch.End();
@@ -134,8 +138,7 @@ namespace Tanks
         #region players methods
 
         private void InitializePlayers()
-        {
-            Random ran = new Random();
+        {            
             players = new Player[2];
             players [0] = new Player()
                               {
@@ -144,9 +147,9 @@ namespace Tanks
                                   MatrixLastCell = matrixLastCell,
                                   Direction = DataTypes.Direction.Down,                                  
                                   Color = new Color(
-                                      ran.Next(0,255),
-                                      ran.Next(0, 255),
-                                      ran.Next(0, 255))
+                                      randomizer.Next(0,255),
+                                      randomizer.Next(0, 255),
+                                      randomizer.Next(0, 255))
                               };
             players[1] = new Player()
                              {
@@ -155,9 +158,9 @@ namespace Tanks
                                  MatrixLastCell = matrixLastCell,
                                  Direction = DataTypes.Direction.Up,
                                  Color = new Color(
-                                     ran.Next(0, 255),
-                                     ran.Next(0, 255),
-                                     ran.Next(0, 255))
+                                     randomizer.Next(0, 255),
+                                     randomizer.Next(0, 255),
+                                     randomizer.Next(0, 255))
                              };
         }
 
@@ -223,8 +226,7 @@ namespace Tanks
         {
             var screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
 
-            spriteBatch.Draw(bgTexture, screenRectangle, Color.White);
-            
+            spriteBatch.Draw(bgTexture, screenRectangle, Color.White);            
         }
 
 
@@ -238,6 +240,43 @@ namespace Tanks
             spriteBatch.Draw(texture, new Vector2(column * imagesRatio + imagesRatio /2 , row * imagesRatio + imagesRatio /2), null, color, rotation, new Vector2(imageCenter, imageCenter), imagesRatio / 100, SpriteEffects.None, 1);
         }
 
+        #endregion
+
+
+        #region Terrain
+
+        /// <summary>
+        /// adds the game terrain to the matrix
+        /// </summary>
+        private void GenerateTerrain ()
+        {
+            double obstaclesCellsTotal = gameMatrix.Length*0.6;
+            
+            for (int i = 0; i < obstaclesCellsTotal; i++)
+            {
+                int row = randomizer.Next(0, matrixLastCell+1);
+                int column = randomizer.Next(0, matrixLastCell+1);
+
+                TerrainCell cell = gameMatrix[row,column];
+                
+                while (cell != null)
+                {
+                    row = randomizer.Next(0, matrixLastCell+1);
+                    column = randomizer.Next(0, matrixLastCell+1);
+                    cell = gameMatrix[row,column];
+                }
+                gameMatrix[row, column] = new TerrainCell()
+                                              {
+                                                  Type = DataTypes.CellType.Trees
+                                              };
+            }
+        }
+
+
+        private void DrawTerrain()
+        {
+            
+        }
         #endregion
     }
 }

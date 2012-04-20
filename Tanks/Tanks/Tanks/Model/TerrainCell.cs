@@ -7,5 +7,6 @@ namespace Tanks.Model
 {
     class TerrainCell
     {
+        public DataTypes.CellType Type { get; set; }
     }
 }
