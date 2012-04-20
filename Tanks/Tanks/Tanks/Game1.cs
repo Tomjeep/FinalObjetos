@@ -26,6 +26,7 @@ namespace Tanks
 
         private Texture2D bgTexture;
         private Texture2D tankTexture;
+        private Texture2D treeTexture;
 
 
         private float imagesRatio; //images size
@@ -82,6 +83,7 @@ namespace Tanks
             // TODO: use this.Content to load your game content here
             bgTexture = Content.Load<Texture2D>("BACKGROUND");
             tankTexture = Content.Load<Texture2D>("Tank");
+            treeTexture = Content.Load<Texture2D>("TREE");
 
             screenHeight = graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
             screenWidth = graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -179,38 +181,38 @@ namespace Tanks
         {
             // Get current state of the keyboard
             KeyboardState state = Keyboard.GetState();
-            if (state.IsKeyDown(Keys.Left))
+
+            if (state.IsKeyDown(Keys.A))
             {
-                players[0].Direction = DataTypes.Direction.Left;                
+                players[0].Direction = DataTypes.Direction.Left;
             }
-            else if (state.IsKeyDown(Keys.Up))
+            else if (state.IsKeyDown(Keys.W))
             {
                 players[0].Direction = DataTypes.Direction.Up;
             }
-            else if (state.IsKeyDown(Keys.Right))
+            else if (state.IsKeyDown(Keys.D))
             {
-                players[0].Direction = DataTypes.Direction.Right;                
+                players[0].Direction = DataTypes.Direction.Right;
             }
-            else if (state.IsKeyDown(Keys.Down))
+            else if (state.IsKeyDown(Keys.S))
             {
                 players[0].Direction = DataTypes.Direction.Down;
             }
 
 
-
-            if (state.IsKeyDown(Keys.A))
+            if (state.IsKeyDown(Keys.Left))
             {
-                players[1].Direction = DataTypes.Direction.Left;
+                players[1].Direction = DataTypes.Direction.Left;                
             }
-            else if (state.IsKeyDown(Keys.W))
+            else if (state.IsKeyDown(Keys.Up))
             {
                 players[1].Direction = DataTypes.Direction.Up;
             }
-            else if (state.IsKeyDown(Keys.D))
+            else if (state.IsKeyDown(Keys.Right))
             {
                 players[1].Direction = DataTypes.Direction.Right;                
             }
-            else if (state.IsKeyDown(Keys.S))
+            else if (state.IsKeyDown(Keys.Down))
             {
                 players[1].Direction = DataTypes.Direction.Down;
             }
@@ -275,7 +277,13 @@ namespace Tanks
 
         private void DrawTerrain()
         {
-            
+            for (int i = 0; i <= matrixLastCell; i++)
+                for (int j = 0; j  <= matrixLastCell; j++)
+                {
+                    TerrainCell cell = gameMatrix[i, j];
+                    if (cell != null && cell.Type.Equals(DataTypes.CellType.Trees))
+                        PrintCell(treeTexture, i, j, Color.Turquoise, 0);
+                }
         }
         #endregion
     }
