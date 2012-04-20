@@ -29,6 +29,7 @@ namespace Tanks
 
 
         private float imagesRatio; //images size
+        private int matrixLastCell;
         private TerrainCell [,] gameMatrix;
         private Player[] players;
 
@@ -56,8 +57,8 @@ namespace Tanks
 
 
             //Initialize data structure
-
-            gameMatrix = new TerrainCell[20,20];
+            matrixLastCell = 19;
+            gameMatrix = new TerrainCell[matrixLastCell+1,matrixLastCell+1];
             imagesRatio = 30;
 
             InitializePlayers();
@@ -140,7 +141,8 @@ namespace Tanks
                               {
                                   Row = 0,
                                   Column = 0,
-                                  Direction = DataTypes.Direction.Down,
+                                  MatrixLastCell = matrixLastCell,
+                                  Direction = DataTypes.Direction.Down,                                  
                                   Color = new Color(
                                       ran.Next(0,255),
                                       ran.Next(0, 255),
@@ -148,8 +150,9 @@ namespace Tanks
                               };
             players[1] = new Player()
                              {
-                                 Row = 19,
-                                 Column = 19,
+                                 Row = matrixLastCell,
+                                 Column = matrixLastCell,
+                                 MatrixLastCell = matrixLastCell,
                                  Direction = DataTypes.Direction.Up,
                                  Color = new Color(
                                      ran.Next(0, 255),
@@ -177,15 +180,15 @@ namespace Tanks
             {
                 players[0].Direction = DataTypes.Direction.Left;                
             }
-            if (state.IsKeyDown(Keys.Up))
+            else if (state.IsKeyDown(Keys.Up))
             {
                 players[0].Direction = DataTypes.Direction.Up;
             }
-            if (state.IsKeyDown(Keys.Right))
+            else if (state.IsKeyDown(Keys.Right))
             {
                 players[0].Direction = DataTypes.Direction.Right;                
             }
-            if (state.IsKeyDown(Keys.Down))
+            else if (state.IsKeyDown(Keys.Down))
             {
                 players[0].Direction = DataTypes.Direction.Down;
             }
@@ -196,15 +199,15 @@ namespace Tanks
             {
                 players[1].Direction = DataTypes.Direction.Left;
             }
-            if (state.IsKeyDown(Keys.W))
+            else if (state.IsKeyDown(Keys.W))
             {
                 players[1].Direction = DataTypes.Direction.Up;
             }
-            if (state.IsKeyDown(Keys.D))
+            else if (state.IsKeyDown(Keys.D))
             {
                 players[1].Direction = DataTypes.Direction.Right;                
             }
-            if (state.IsKeyDown(Keys.S))
+            else if (state.IsKeyDown(Keys.S))
             {
                 players[1].Direction = DataTypes.Direction.Down;
             }

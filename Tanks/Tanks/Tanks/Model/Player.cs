@@ -32,6 +32,8 @@ namespace Tanks.Model
 
         public Color Color { get; set; }
 
+        public int MatrixLastCell { get; set; }
+
         public DataTypes.Direction Direction
         {
             get { return direction; } 
@@ -59,6 +61,14 @@ namespace Tanks.Model
 
         private void EvaluatePlayerMovement()
         {
+            if (rowMovement < 0)
+                rowMovement = 0;
+            if (columnMovement < 0)
+                columnMovement = 0;
+            if (rowMovement > MatrixLastCell)
+                rowMovement = MatrixLastCell;
+            if (columnMovement > MatrixLastCell)
+                columnMovement = MatrixLastCell;
             row = Convert.ToInt32(rowMovement);
             column = Convert.ToInt32(columnMovement);
         }
