@@ -145,8 +145,9 @@ namespace Tanks
             players [0] = new Player()
                               {
                                   Row = 0,
+                                  RowDisplacement = 0,
                                   Column = 0,
-                                  MatrixLastCell = matrixLastCell,
+                                  ColumnDisplacement = 0,
                                   Direction = DataTypes.Direction.Down,                                  
                                   Color = new Color(
                                       randomizer.Next(0,255),
@@ -156,8 +157,9 @@ namespace Tanks
             players[1] = new Player()
                              {
                                  Row = matrixLastCell,
+                                 RowDisplacement = matrixLastCell,
                                  Column = matrixLastCell,
-                                 MatrixLastCell = matrixLastCell,
+                                 ColumnDisplacement = matrixLastCell,
                                  Direction = DataTypes.Direction.Up,
                                  Color = new Color(
                                      randomizer.Next(0, 255),
@@ -184,37 +186,71 @@ namespace Tanks
 
             if (state.IsKeyDown(Keys.A))
             {
-                players[0].Direction = DataTypes.Direction.Left;
+                EvaulateMovement(players[0], DataTypes.Direction.Left);
             }
             else if (state.IsKeyDown(Keys.W))
             {
-                players[0].Direction = DataTypes.Direction.Up;
+                EvaulateMovement(players[0], DataTypes.Direction.Up);
             }
             else if (state.IsKeyDown(Keys.D))
             {
-                players[0].Direction = DataTypes.Direction.Right;
+                EvaulateMovement(players[0], DataTypes.Direction.Right);
             }
             else if (state.IsKeyDown(Keys.S))
             {
-                players[0].Direction = DataTypes.Direction.Down;
+                EvaulateMovement(players[0], DataTypes.Direction.Down);
             }
 
 
             if (state.IsKeyDown(Keys.Left))
             {
-                players[1].Direction = DataTypes.Direction.Left;                
+                EvaulateMovement(players[1], DataTypes.Direction.Left);
             }
             else if (state.IsKeyDown(Keys.Up))
             {
-                players[1].Direction = DataTypes.Direction.Up;
+                EvaulateMovement(players[1], DataTypes.Direction.Up);
             }
             else if (state.IsKeyDown(Keys.Right))
             {
-                players[1].Direction = DataTypes.Direction.Right;                
+                EvaulateMovement(players[1], DataTypes.Direction.Right);              
             }
             else if (state.IsKeyDown(Keys.Down))
             {
-                players[1].Direction = DataTypes.Direction.Down;
+                EvaulateMovement(players[1], DataTypes.Direction.Down);
+            }
+        }
+
+        private void EvaulateMovement(Player player, DataTypes.Direction direction)
+        {
+            float columnDisplacement = player.ColumnDisplacement;
+            float rowDisplacement = player.RowDisplacement;
+            switch (direction)
+            {
+                case DataTypes.Direction.Left:
+                    player.Direction = DataTypes.Direction.Left;
+                    columnDisplacement -= 0.15f;
+                    break;
+                case DataTypes.Direction.Right:
+                    player.Direction = DataTypes.Direction.Right;
+                    columnDisplacement += 0.15f;
+                    break;
+                case DataTypes.Direction.Up:
+                    player.Direction = DataTypes.Direction.Up;
+                    rowDisplacement -= 0.15f;
+                    break;
+                case DataTypes.Direction.Down:
+                    player.Direction = DataTypes.Direction.Down;
+                    rowDisplacement += 0.15f;
+                    break;
+            }
+
+            if (columnDisplacement >= 0 && columnDisplacement <= matrixLastCell && rowDisplacement >= 0 && rowDisplacement <= matrixLastCell)
+            {
+                player.RowDisplacement = rowDisplacement;
+                player.Row = Convert.ToInt32(Math.Round(rowDisplacement));
+
+                player.ColumnDisplacement = columnDisplacement;
+                player.Column = Convert.ToInt32(Math.Round(columnDisplacement));
             }
         }
 
