@@ -27,6 +27,7 @@ namespace Tanks
         private Texture2D bgTexture;
         private Texture2D tankTexture;
         private Texture2D treeTexture;
+        private Texture2D cannonBallTexture;
 
 
         private float imagesRatio; //images size
@@ -63,6 +64,7 @@ namespace Tanks
             matrixLastCell = 19;
             gameMatrix = new TerrainCell[matrixLastCell+1,matrixLastCell+1];
             imagesRatio = 30;
+            
 
             InitializePlayers();
             GenerateTerrain();
@@ -84,6 +86,7 @@ namespace Tanks
             bgTexture = Content.Load<Texture2D>("BACKGROUND");
             tankTexture = Content.Load<Texture2D>("Tank");
             treeTexture = Content.Load<Texture2D>("TREE");
+            cannonBallTexture = Content.Load<Texture2D>("CANONBALL");
 
             screenHeight = graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
             screenWidth = graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -174,6 +177,9 @@ namespace Tanks
             foreach (var player in players)
             {
                 PrintCell(tankTexture, player.Row, player.Column, player.Color, (int)player.Direction);
+                //draws cannon ball
+                if (player.CannonBall != null)
+                    spriteBatch.Draw(cannonBallTexture, player.CannonBall.Position, null, Color.White, 0, new Vector2(0,0), imagesRatio/100, SpriteEffects.None, 1);
             }
 
             
@@ -200,6 +206,11 @@ namespace Tanks
             {
                 EvaulateMovement(players[0], DataTypes.Direction.Down);
             }
+            else if (state.IsKeyDown(Keys.Space))
+            {
+                Fire(players[0]);
+            }
+
 
 
             if (state.IsKeyDown(Keys.Left))
@@ -218,7 +229,11 @@ namespace Tanks
             {
                 EvaulateMovement(players[1], DataTypes.Direction.Down);
             }
-        }
+            else if (state.IsKeyDown(Keys.Enter))
+            {
+                Fire(players[1]);
+            }
+        }        
 
         private void EvaulateMovement(Player player, DataTypes.Direction direction)
         {
@@ -264,6 +279,12 @@ namespace Tanks
         private bool IsCellAvailable(int row, int col)
         {
             return gameMatrix[row, col] == null;
+        }
+
+        private void Fire(Player player)
+        {
+            float adjustment = (imagesRatio - (cannonBallTexture.Height*(imagesRatio/100)))/2;
+            player.Shoot(new Vector2(player.Column * imagesRatio + adjustment, player.Row * imagesRatio + adjustment));
         }
 
         #endregion

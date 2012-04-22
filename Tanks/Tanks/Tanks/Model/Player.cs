@@ -19,6 +19,17 @@ namespace Tanks.Model
         public Color Color { get; set; }
 
         public DataTypes.Direction Direction { get; set; }
+
+        public CannonBall CannonBall { get; set; }
+
+        public void Shoot (Vector2 position)
+        {
+            CannonBall = new CannonBall()
+                             {
+                                 Position = position,
+                                 Direction = Direction
+                             };
+        }
         
     }
 }

@@ -107,6 +107,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\CannonBall.cs" />
     <Compile Include="Model\DataTypes.cs" />
     <Compile Include="Model\Player.cs" />
     <Compile Include="Model\TerrainCell.cs" />
