@@ -116,6 +116,8 @@ namespace Tanks
 
             ReadKeyboard();
 
+            BulletHits();
+
             base.Update(gameTime);
         }
 
@@ -364,6 +366,28 @@ namespace Tanks
                         PrintCell(treeTexture, i, j, Color.Turquoise, 0);
                 }
         }
+        #endregion
+
+
+        #region bullets
+
+        private void BulletHits()
+        {
+            foreach (var player in players)
+            {
+                if (player.CannonBall != null)
+                {
+                    float x = player.CannonBall.Position.X;
+                    float y = player.CannonBall.Position.Y;
+                    //Out of field bullet
+                    float max = (matrixLastCell + 1)*imagesRatio; //total game area size
+                    max -= cannonBallTexture.Height*(imagesRatio/100);
+                    if (x < 0 || x > max || y < 0 || y > max)
+                        player.CannonBall = null;
+                }
+            }
+        }
+
         #endregion
     }
 }
