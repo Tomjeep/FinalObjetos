@@ -246,12 +246,24 @@ namespace Tanks
 
             if (columnDisplacement >= 0 && columnDisplacement <= matrixLastCell && rowDisplacement >= 0 && rowDisplacement <= matrixLastCell)
             {
-                player.RowDisplacement = rowDisplacement;
-                player.Row = Convert.ToInt32(Math.Round(rowDisplacement));
+                int newRow = Convert.ToInt32(Math.Round(rowDisplacement));
+                int newColumn = Convert.ToInt32(Math.Round(columnDisplacement));
 
-                player.ColumnDisplacement = columnDisplacement;
-                player.Column = Convert.ToInt32(Math.Round(columnDisplacement));
+
+                if (IsCellAvailable(newRow, newColumn))
+                {
+                    player.RowDisplacement = rowDisplacement;
+                    player.Row = newRow;
+
+                    player.ColumnDisplacement = columnDisplacement;
+                    player.Column = newColumn;
+                }
             }
+        }
+
+        private bool IsCellAvailable(int row, int col)
+        {
+            return gameMatrix[row, col] == null;
         }
 
         #endregion
