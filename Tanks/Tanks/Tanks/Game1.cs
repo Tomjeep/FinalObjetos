@@ -63,10 +63,10 @@ namespace Tanks
             matrixLastCell = 19;
             gameMatrix = new TerrainCell[matrixLastCell+1,matrixLastCell+1];
             imagesRatio = 30;
-            
 
-            GenerateTerrain();
             InitializePlayers();
+            GenerateTerrain();
+            
 
             base.Initialize();
         }
@@ -309,7 +309,7 @@ namespace Tanks
 
                 TerrainCell cell = gameMatrix[row,column];
                 
-                while (cell != null)
+                while (cell != null || IsPlayerStartArea(row,column))
                 {
                     row = randomizer.Next(0, matrixLastCell+1);
                     column = randomizer.Next(0, matrixLastCell+1);
@@ -320,6 +320,16 @@ namespace Tanks
                                                   Type = DataTypes.CellType.Trees
                                               };
             }
+        }
+
+        private bool IsPlayerStartArea(int row, int column)
+        {
+            foreach (var player in players)
+            {
+                if (row == player.Row && column == player.Column)
+                    return true;
+            }
+            return false;
         }
 
 
