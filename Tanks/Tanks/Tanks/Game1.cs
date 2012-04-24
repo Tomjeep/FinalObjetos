@@ -384,6 +384,17 @@ namespace Tanks
                     max -= cannonBallTexture.Height*(imagesRatio/100);
                     if (x < 0 || x > max || y < 0 || y > max)
                         player.CannonBall = null;
+                    else
+                    {
+                        int row = Convert.ToInt32(Math.Round(y/imagesRatio));
+                        int col = Convert.ToInt32(Math.Round(x/imagesRatio));
+
+                        if (gameMatrix[row,col] != null)
+                        {
+                            gameMatrix[row, col] = null;
+                            player.CannonBall = null;
+                        }
+                    }
                 }
             }
         }
