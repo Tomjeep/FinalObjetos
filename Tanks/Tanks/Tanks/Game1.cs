@@ -389,7 +389,7 @@ namespace Tanks
                         int row = Convert.ToInt32(Math.Round(y/imagesRatio));
                         int col = Convert.ToInt32(Math.Round(x/imagesRatio));
 
-                        if (gameMatrix[row,col] != null)
+                        if (row <= matrixLastCell && col <= matrixLastCell && gameMatrix[row,col] != null)
                         {
                             gameMatrix[row, col] = null;
                             player.CannonBall = null;
