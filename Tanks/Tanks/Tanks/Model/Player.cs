@@ -8,6 +8,10 @@ namespace Tanks.Model
 {
     class Player
     {
+        public int Id { get; set; }
+
+        public bool IsAlive { get; set; }
+
         public float RowDisplacement { get; set; }
 
         public float ColumnDisplacement { get; set; }

@@ -149,6 +149,8 @@ namespace Tanks
             players = new Player[2];
             players [0] = new Player()
                               {
+                                  Id = 0,
+                                  IsAlive = true,
                                   Row = 0,
                                   RowDisplacement = 0,
                                   Column = 0,
@@ -161,6 +163,8 @@ namespace Tanks
                               };
             players[1] = new Player()
                              {
+                                 Id = 1,
+                                 IsAlive = true,
                                  Row = matrixLastCell,
                                  RowDisplacement = matrixLastCell,
                                  Column = matrixLastCell,
@@ -178,13 +182,17 @@ namespace Tanks
         {
             foreach (var player in players)
             {
-                PrintCell(tankTexture, player.Row, player.Column, player.Color, (int)player.Direction);
-                //draws cannon ball
-                if (player.CannonBall != null)
-                    spriteBatch.Draw(cannonBallTexture, player.CannonBall.Position, null, Color.White, 0, new Vector2(0,0), imagesRatio/100, SpriteEffects.None, 1);
+                if (player.IsAlive)
+                {
+                    PrintCell(tankTexture, player.Row, player.Column, player.Color, (int) player.Direction);
+                    //draws cannon ball
+                    if (player.CannonBall != null)
+                        spriteBatch.Draw(cannonBallTexture, player.CannonBall.Position, null, Color.White, 0,
+                                         new Vector2(0, 0), imagesRatio/100, SpriteEffects.None, 1);
+                }
             }
 
-            
+
         }
 
         private void ReadKeyboard()
@@ -285,8 +293,11 @@ namespace Tanks
 
         private void Fire(Player player)
         {
-            float adjustment = (imagesRatio - (cannonBallTexture.Height*(imagesRatio/100)))/2;
-            player.Shoot(new Vector2(player.Column * imagesRatio + adjustment, player.Row * imagesRatio + adjustment));
+            if (player.IsAlive && player.CannonBall == null)
+            {
+                float adjustment = (imagesRatio - (cannonBallTexture.Height*(imagesRatio/100)))/2;
+                player.Shoot(new Vector2(player.Column*imagesRatio + adjustment, player.Row*imagesRatio + adjustment));
+            }
         }
 
         #endregion
@@ -393,6 +404,14 @@ namespace Tanks
                         {
                             gameMatrix[row, col] = null;
                             player.CannonBall = null;
+                        }
+
+                        foreach (var player1 in players)
+                        {
+                            if(player.Id != player1.Id && player1.Row == row && player1.Column == col)
+                            {
+                                player1.IsAlive = false;
+                            }
                         }
                     }
                 }
