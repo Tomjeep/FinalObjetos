@@ -31,16 +31,16 @@ namespace Tanks.Model
             switch (Direction)
             {
                     case DataTypes.Direction.Right:
-                    position.X += 4.5f;
+                    position.X += speed;
                     break;
                     case DataTypes.Direction.Left:
-                    position.X -= 4.5f;
+                    position.X -= speed;
                     break;
                     case DataTypes.Direction.Up:
-                    position.Y -= 4.5f;
+                    position.Y -= speed;
                     break;
                     case DataTypes.Direction.Down:
-                    position.Y += 4.5f;
+                    position.Y += speed;
                     break;
             }
         }
