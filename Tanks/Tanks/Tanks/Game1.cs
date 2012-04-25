@@ -27,7 +27,13 @@ namespace Tanks
         private Texture2D bgTexture;
         private Texture2D tankTexture;
         private Texture2D treeTexture;
+        private Texture2D stoneTexture;
         private Texture2D cannonBallTexture;
+
+
+        private SoundEffect DestruirSnd;
+        private SoundEffect DispararSnd;
+        private SoundEffect CaminarSnd;
 
 
         private float imagesRatio; //images size
@@ -86,7 +92,13 @@ namespace Tanks
             bgTexture = Content.Load<Texture2D>("BACKGROUND");
             tankTexture = Content.Load<Texture2D>("Tank");
             treeTexture = Content.Load<Texture2D>("TREE");
+            stoneTexture = Content.Load<Texture2D>("STONE");
             cannonBallTexture = Content.Load<Texture2D>("CANONBALL");
+
+
+            DestruirSnd = Content.Load<SoundEffect>("DESTRUIR");
+            DispararSnd = Content.Load<SoundEffect>("DISPARAR");
+            CaminarSnd = Content.Load<SoundEffect>("CAMINAR");
 
             screenHeight = graphics.GraphicsDevice.PresentationParameters.BackBufferHeight;
             screenWidth = graphics.GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -249,6 +261,7 @@ namespace Tanks
         {
             float columnDisplacement = player.ColumnDisplacement;
             float rowDisplacement = player.RowDisplacement;
+            CaminarSnd.Play();
             switch (direction)
             {
                 case DataTypes.Direction.Left:
@@ -295,6 +308,7 @@ namespace Tanks
         {
             if (player.IsAlive && player.CannonBall == null)
             {
+                DispararSnd.Play();
                 float adjustment = (imagesRatio - (cannonBallTexture.Height*(imagesRatio/100)))/2;
                 player.Shoot(new Vector2(player.Column*imagesRatio + adjustment, player.Row*imagesRatio + adjustment));
             }
@@ -334,25 +348,32 @@ namespace Tanks
         /// </summary>
         private void GenerateTerrain ()
         {
-            double obstaclesCellsTotal = gameMatrix.Length*0.6;
             
+            generateCell(DataTypes.CellType.Trees, gameMatrix.Length * 0.6);
+            generateCell(DataTypes.CellType.Stone, gameMatrix.Length * 0.1);
+            
+            
+        }
+
+        private void generateCell(DataTypes.CellType type, double obstaclesCellsTotal)
+        {
             for (int i = 0; i < obstaclesCellsTotal; i++)
             {
-                int row = randomizer.Next(0, matrixLastCell+1);
-                int column = randomizer.Next(0, matrixLastCell+1);
+                int row = randomizer.Next(0, matrixLastCell + 1);
+                int column = randomizer.Next(0, matrixLastCell + 1);
 
-                TerrainCell cell = gameMatrix[row,column];
-                
-                while (cell != null || IsPlayerStartArea(row,column))
+                TerrainCell cell = gameMatrix[row, column];
+
+                while (cell != null || IsPlayerStartArea(row, column))
                 {
-                    row = randomizer.Next(0, matrixLastCell+1);
-                    column = randomizer.Next(0, matrixLastCell+1);
-                    cell = gameMatrix[row,column];
+                    row = randomizer.Next(0, matrixLastCell + 1);
+                    column = randomizer.Next(0, matrixLastCell + 1);
+                    cell = gameMatrix[row, column];
                 }
                 gameMatrix[row, column] = new TerrainCell()
-                                              {
-                                                  Type = DataTypes.CellType.Trees
-                                              };
+                {
+                    Type = type
+                };
             }
         }
 
@@ -374,7 +395,9 @@ namespace Tanks
                 {
                     TerrainCell cell = gameMatrix[i, j];
                     if (cell != null && cell.Type.Equals(DataTypes.CellType.Trees))
-                        PrintCell(treeTexture, i, j, Color.Turquoise, 0);
+                        PrintCell(treeTexture, i, j, Color.White, 0);
+                    if (cell != null && cell.Type.Equals(DataTypes.CellType.Stone))
+                        PrintCell(stoneTexture, i, j, Color.White, 0);
                 }
         }
         #endregion
@@ -402,7 +425,11 @@ namespace Tanks
 
                         if (row <= matrixLastCell && col <= matrixLastCell && gameMatrix[row,col] != null)
                         {
-                            gameMatrix[row, col] = null;
+                            if(gameMatrix[row,col].Type.Equals(DataTypes.CellType.Trees))
+                            {
+                                DestruirSnd.Play();
+                                gameMatrix[row, col] = null;
+                            }
                             player.CannonBall = null;
                         }
 
@@ -410,7 +437,9 @@ namespace Tanks
                         {
                             if(player.Id != player1.Id && player1.Row == row && player1.Column == col)
                             {
+                                DestruirSnd.Play();
                                 player1.IsAlive = false;
+                                player.CannonBall = null;
                             }
                         }
                     }
