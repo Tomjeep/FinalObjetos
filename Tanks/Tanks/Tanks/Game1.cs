@@ -192,7 +192,26 @@ namespace Tanks
             {
                 if (player.IsAlive)
                 {
-                    PrintCell(tankTexture, player.Row, player.Column, player.Color, (int) player.Direction);
+                    float xMovement = 0;
+                    float yMovement = 0;
+
+                    switch (player.Direction)
+                    {
+                        case DataTypes.Direction.Left:
+                            xMovement = player.MovingTime;
+                            break;
+                        case DataTypes.Direction.Right:
+                            xMovement = player.MovingTime * -1;
+                            break;
+                        case DataTypes.Direction.Up:
+                            yMovement = player.MovingTime;
+                            break;
+                        case DataTypes.Direction.Down:
+                            yMovement = player.MovingTime * -1;
+                            break;
+                    }
+
+                    PrintCell(tankTexture, player.Row, player.Column, player.Color, (int) player.Direction, xMovement, yMovement);
                     //draws cannon ball
                     if (player.CannonBall != null)
                         spriteBatch.Draw(cannonBallTexture, player.CannonBall.Position, null, Color.White, 0,
@@ -325,11 +344,11 @@ namespace Tanks
         #region general methods
 
 
-        private void PrintCell(Texture2D texture, int row, int column, Color color, int angle = 0)
-        {
+        private void PrintCell(Texture2D texture, int row, int column, Color color, int angle = 0, float xMovement = 0, float yMovement = 0)
+        {            
             float rotation = MathHelper.ToRadians(angle);
             float imageCenter = texture.Height/2;            
-            spriteBatch.Draw(texture, new Vector2(column * imagesRatio + imagesRatio /2 , row * imagesRatio + imagesRatio /2), null, color, rotation, new Vector2(imageCenter, imageCenter), imagesRatio / 100, SpriteEffects.None, 1);
+            spriteBatch.Draw(texture, new Vector2(column * imagesRatio + imagesRatio /2 + xMovement, row * imagesRatio + imagesRatio /2 + yMovement), null, color, rotation, new Vector2(imageCenter, imageCenter), imagesRatio / 100, SpriteEffects.None, 1);
         }
 
         #endregion
