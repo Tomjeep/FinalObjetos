@@ -12,11 +12,9 @@ namespace Tanks.Model
 
         public bool IsAlive { get; set; }
 
-        public float RowDisplacement { get; set; }
-
-        public float ColumnDisplacement { get; set; }
-
         public float ReloadTime { get; set; }
+
+        public float MovingTime { get; set; }
 
         public int Row { get; set; }
 

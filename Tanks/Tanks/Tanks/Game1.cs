@@ -164,9 +164,7 @@ namespace Tanks
                                   Id = 0,
                                   IsAlive = true,
                                   Row = 0,
-                                  RowDisplacement = 0,
                                   Column = 0,
-                                  ColumnDisplacement = 0,
                                   Direction = DataTypes.Direction.Down,                                  
                                   Color = new Color(
                                       randomizer.Next(0,255),
@@ -178,9 +176,7 @@ namespace Tanks
                                  Id = 1,
                                  IsAlive = true,
                                  Row = matrixLastCell,
-                                 RowDisplacement = matrixLastCell,
                                  Column = matrixLastCell,
-                                 ColumnDisplacement = matrixLastCell,
                                  Direction = DataTypes.Direction.Up,
                                  Color = new Color(
                                      randomizer.Next(0, 255),
@@ -259,42 +255,39 @@ namespace Tanks
 
         private void EvaulateMovement(Player player, DataTypes.Direction direction)
         {
-            float columnDisplacement = player.ColumnDisplacement;
-            float rowDisplacement = player.RowDisplacement;
-            CaminarSnd.Play();
-            switch (direction)
+            if (player.MovingTime <= 0)
             {
-                case DataTypes.Direction.Left:
-                    player.Direction = DataTypes.Direction.Left;
-                    columnDisplacement -= 0.15f;
-                    break;
-                case DataTypes.Direction.Right:
-                    player.Direction = DataTypes.Direction.Right;
-                    columnDisplacement += 0.15f;
-                    break;
-                case DataTypes.Direction.Up:
-                    player.Direction = DataTypes.Direction.Up;
-                    rowDisplacement -= 0.15f;
-                    break;
-                case DataTypes.Direction.Down:
-                    player.Direction = DataTypes.Direction.Down;
-                    rowDisplacement += 0.15f;
-                    break;
-            }
-
-            if (columnDisplacement >= 0 && columnDisplacement <= matrixLastCell && rowDisplacement >= 0 && rowDisplacement <= matrixLastCell)
-            {
-                int newRow = Convert.ToInt32(Math.Round(rowDisplacement));
-                int newColumn = Convert.ToInt32(Math.Round(columnDisplacement));
-
-
-                if (IsCellAvailable(newRow, newColumn))
+                int col = player.Column;
+                int row = player.Row;
+                CaminarSnd.Play();
+                switch (direction)
                 {
-                    player.RowDisplacement = rowDisplacement;
-                    player.Row = newRow;
+                    case DataTypes.Direction.Left:
+                        player.Direction = DataTypes.Direction.Left;
+                        col--;
+                        break;
+                    case DataTypes.Direction.Right:
+                        player.Direction = DataTypes.Direction.Right;
+                        col++;
+                        break;
+                    case DataTypes.Direction.Up:
+                        player.Direction = DataTypes.Direction.Up;
+                        row--;
+                        break;
+                    case DataTypes.Direction.Down:
+                        player.Direction = DataTypes.Direction.Down;
+                        row++;
+                        break;
+                }
 
-                    player.ColumnDisplacement = columnDisplacement;
-                    player.Column = newColumn;
+                if (col >= 0 && col <= matrixLastCell && row >= 0 && row <= matrixLastCell)
+                {
+                    if (IsCellAvailable(row, col))
+                    {
+                        player.Row = row;
+                        player.Column = col;
+                        player.MovingTime = 25;
+                    }
                 }
             }
         }
@@ -410,6 +403,10 @@ namespace Tanks
         {
             foreach (var player in players)
             {
+                if(player.MovingTime > 0)
+                {
+                    player.MovingTime--;
+                }
                 if (player.ReloadTime > 0)
                 {
                     player.ReloadTime--;
