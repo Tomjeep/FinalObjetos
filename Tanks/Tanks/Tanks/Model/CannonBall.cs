@@ -8,7 +8,7 @@ namespace Tanks.Model
 {
     class CannonBall
     {
-        private const float speed = 4.5f;
+        private const float speed = 1.5f;        
 
         private Vector2 position;
 

@@ -306,8 +306,9 @@ namespace Tanks
 
         private void Fire(Player player)
         {
-            if (player.IsAlive && player.CannonBall == null)
+            if (player.IsAlive && player.ReloadTime <= 0 && player.CannonBall == null)
             {
+                player.ReloadTime = 100;
                 DispararSnd.Play();
                 float adjustment = (imagesRatio - (cannonBallTexture.Height*(imagesRatio/100)))/2;
                 player.Shoot(new Vector2(player.Column*imagesRatio + adjustment, player.Row*imagesRatio + adjustment));
@@ -409,6 +410,10 @@ namespace Tanks
         {
             foreach (var player in players)
             {
+                if (player.ReloadTime > 0)
+                {
+                    player.ReloadTime--;
+                }
                 if (player.CannonBall != null)
                 {
                     float x = player.CannonBall.Position.X;
