@@ -422,7 +422,7 @@ namespace Tanks
             {
                 foreach (var player in players)
                 {
-                    if (player.Row == row && player.Column == col)
+                    if (player.IsAlive && player.Row == row && player.Column == col)
                     {
                         return false;
                     }
