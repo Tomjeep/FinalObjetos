@@ -40,6 +40,7 @@ namespace Tanks
         private int matrixLastCell;
         private TerrainCell [,] gameMatrix;
         private Player[] players;
+        private int numberOfPlayers;
 
         public Game1()
         {
@@ -70,8 +71,8 @@ namespace Tanks
             matrixLastCell = 19;
             gameMatrix = new TerrainCell[matrixLastCell+1,matrixLastCell+1];
             imagesRatio = 30;
-            
 
+            numberOfPlayers = 4;
             InitializePlayers();
             GenerateTerrain();
             
@@ -157,8 +158,11 @@ namespace Tanks
         #region players methods
 
         private void InitializePlayers()
-        {            
-            players = new Player[2];
+        {
+            if (numberOfPlayers < 2 || numberOfPlayers > 4)
+                numberOfPlayers = 2;
+
+            players = new Player[numberOfPlayers];
             players [0] = new Player()
                               {
                                   Id = 0,
@@ -183,6 +187,36 @@ namespace Tanks
                                      randomizer.Next(0, 255),
                                      randomizer.Next(0, 255))
                              };
+            if (numberOfPlayers > 2)
+            {
+                players[2] = new Player()
+                                 {
+                                     Id = 2,
+                                     IsAlive = true,
+                                     Row = matrixLastCell,
+                                     Column = 0,
+                                     Direction = DataTypes.Direction.Up,
+                                     Color = new Color(
+                                         randomizer.Next(0, 255),
+                                         randomizer.Next(0, 255),
+                                         randomizer.Next(0, 255))
+                                 };
+                if (numberOfPlayers > 3)
+                {
+                    players[3] = new Player()
+                                     {
+                                         Id = 3,
+                                         IsAlive = true,
+                                         Row = 0,
+                                         Column = matrixLastCell,
+                                         Direction = DataTypes.Direction.Down,
+                                         Color = new Color(
+                                             randomizer.Next(0, 255),
+                                             randomizer.Next(0, 255),
+                                             randomizer.Next(0, 255))
+                                     };
+                }
+            }
         }
 
 
@@ -227,6 +261,22 @@ namespace Tanks
             // Get current state of the keyboard
             KeyboardState state = Keyboard.GetState();
 
+            player1Movement(state);
+            player2Movement(state);
+            if (numberOfPlayers > 2)
+            {
+                player3Movement(state);
+                if (numberOfPlayers > 3)
+                {
+                    player4Movement(state);
+                }
+            }
+            
+            
+        }        
+
+        private void player1Movement(KeyboardState state)
+        {
             if (state.IsKeyDown(Keys.A))
             {
                 EvaulateMovement(players[0], DataTypes.Direction.Left);
@@ -247,9 +297,11 @@ namespace Tanks
             {
                 Fire(players[0]);
             }
+        }
 
 
-
+        private void player2Movement(KeyboardState state)
+        {
             if (state.IsKeyDown(Keys.Left))
             {
                 EvaulateMovement(players[1], DataTypes.Direction.Left);
@@ -260,7 +312,7 @@ namespace Tanks
             }
             else if (state.IsKeyDown(Keys.Right))
             {
-                EvaulateMovement(players[1], DataTypes.Direction.Right);              
+                EvaulateMovement(players[1], DataTypes.Direction.Right);
             }
             else if (state.IsKeyDown(Keys.Down))
             {
@@ -270,7 +322,55 @@ namespace Tanks
             {
                 Fire(players[1]);
             }
-        }        
+        }
+
+        private void player3Movement(KeyboardState state)
+        {
+            if (state.IsKeyDown(Keys.F))
+            {
+                EvaulateMovement(players[2], DataTypes.Direction.Left);
+            }
+            else if (state.IsKeyDown(Keys.T))
+            {
+                EvaulateMovement(players[2], DataTypes.Direction.Up);
+            }
+            else if (state.IsKeyDown(Keys.H))
+            {
+                EvaulateMovement(players[2], DataTypes.Direction.Right);
+            }
+            else if (state.IsKeyDown(Keys.G))
+            {
+                EvaulateMovement(players[2], DataTypes.Direction.Down);
+            }
+            else if (state.IsKeyDown(Keys.Y))
+            {
+                Fire(players[2]);
+            }
+        }
+
+        private void player4Movement(KeyboardState state)
+        {
+            if (state.IsKeyDown(Keys.J))
+            {
+                EvaulateMovement(players[3], DataTypes.Direction.Left);
+            }
+            else if (state.IsKeyDown(Keys.I))
+            {
+                EvaulateMovement(players[3], DataTypes.Direction.Up);
+            }
+            else if (state.IsKeyDown(Keys.L))
+            {
+                EvaulateMovement(players[3], DataTypes.Direction.Right);
+            }
+            else if (state.IsKeyDown(Keys.K))
+            {
+                EvaulateMovement(players[3], DataTypes.Direction.Down);
+            }
+            else if (state.IsKeyDown(Keys.O))
+            {
+                Fire(players[3]);
+            }
+        }
 
         private void EvaulateMovement(Player player, DataTypes.Direction direction)
         {
