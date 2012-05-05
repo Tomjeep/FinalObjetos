@@ -418,7 +418,18 @@ namespace Tanks
 
         private bool IsCellAvailable(int row, int col)
         {
-            return gameMatrix[row, col] == null;
+            if (gameMatrix[row, col] == null)
+            {
+                foreach (var player in players)
+                {
+                    if (player.Row == row && player.Column == col)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         private void Fire(Player player)
