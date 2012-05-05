@@ -42,6 +42,7 @@ namespace Tanks
         private TerrainCell [,] gameMatrix;
         private Player[] players;
         private int numberOfPlayers;
+        private bool useBot;
 
         public Game1()
         {
@@ -76,6 +77,7 @@ namespace Tanks
             gameMatrix = new TerrainCell[matrixLastCell+1,matrixLastCell+1];
             imagesRatio = 30;
 
+            useBot = true;
             numberOfPlayers = 2;
             InitializePlayers();
             GenerateTerrain();
@@ -136,7 +138,78 @@ namespace Tanks
 
             BulletHits();
 
+            if (useBot)
+            {                
+                DataTypes.Direction direc = NextBotMovement();
+                EvaulateMovement(players[numberOfPlayers], direc);
+                Fire(players[numberOfPlayers]);
+            }
+
             base.Update(gameTime);
+        }
+
+        private DataTypes.Direction NextBotMovement()
+        {
+            Player closestPlayer = null;
+            int closestDistance = int.MaxValue;
+            int botCol = players[numberOfPlayers].Column;
+            int botRow = players[numberOfPlayers].Row;
+
+            for (int i = 0; i < numberOfPlayers; i++)
+            {
+                var player = players[i];
+                if (player.IsAlive)
+                {
+                    int currentDistance = Math.Abs(botRow - player.Row);
+                    currentDistance += Math.Abs(botCol - player.Column);
+                    if (closestDistance > currentDistance)
+                    {
+                        closestDistance = currentDistance;
+                        closestPlayer = player;
+                    }
+                }
+            }
+
+            if (closestDistance < int.MaxValue)
+            {
+                int rowDistance = closestPlayer.Row - botRow;
+                int colDistance = closestPlayer.Column - botCol;
+
+                DataTypes.Direction xDir = colDistance < 0 ? DataTypes.Direction.Left : DataTypes.Direction.Right;
+                DataTypes.Direction yDir = rowDistance < 0 ? DataTypes.Direction.Up : DataTypes.Direction.Down;
+
+                if (Math.Abs(rowDistance) < Math.Abs(colDistance))
+                {
+                    return isBotCellValid(xDir) ? xDir : yDir;
+                }
+                else
+                {
+                    return isBotCellValid(yDir) ? yDir : xDir;
+                }
+            }
+            return DataTypes.Direction.Up;
+        }
+
+        private bool isBotCellValid(DataTypes.Direction dir)
+        {
+            int col = players[numberOfPlayers].Column;
+            int row = players[numberOfPlayers].Row;
+            switch (dir)
+            {
+                case DataTypes.Direction.Left:
+                    col--;
+                    break;
+                case DataTypes.Direction.Right:
+                    col++;
+                    break;
+                case DataTypes.Direction.Up:
+                    row--;
+                    break;
+                case DataTypes.Direction.Down:
+                    row++;
+                    break;
+            }
+            return (gameMatrix[row, col] == null || gameMatrix[row, col].Type != DataTypes.CellType.Stone);
         }
 
         /// <summary>
@@ -166,8 +239,11 @@ namespace Tanks
         {
             if (numberOfPlayers < 2 || numberOfPlayers > 4)
                 numberOfPlayers = 2;
+            int totalPlayers = numberOfPlayers;
+            if (useBot)
+                totalPlayers++;
 
-            players = new Player[numberOfPlayers];
+            players = new Player[totalPlayers];
             players [0] = new Player()
                               {
                                   Id = 0,
@@ -221,6 +297,19 @@ namespace Tanks
                                              randomizer.Next(0, 255))
                                      };
                 }
+            }
+            //Initialize bot
+            if (useBot)
+            {
+                players[numberOfPlayers] = new Player()
+                                 {
+                                     Id = numberOfPlayers,
+                                     IsAlive = true,
+                                     Row = matrixLastCell/2,
+                                     Column = matrixLastCell/2,
+                                     Direction = DataTypes.Direction.Up,
+                                     Color = Color.Black
+                                 };
             }
         }
 
@@ -298,7 +387,7 @@ namespace Tanks
             {
                 EvaulateMovement(players[0], DataTypes.Direction.Down);
             }
-            else if (state.IsKeyDown(Keys.Space))
+            if (state.IsKeyDown(Keys.Space))
             {
                 Fire(players[0]);
             }
@@ -323,7 +412,7 @@ namespace Tanks
             {
                 EvaulateMovement(players[1], DataTypes.Direction.Down);
             }
-            else if (state.IsKeyDown(Keys.Enter))
+            if (state.IsKeyDown(Keys.Enter))
             {
                 Fire(players[1]);
             }
@@ -347,7 +436,7 @@ namespace Tanks
             {
                 EvaulateMovement(players[2], DataTypes.Direction.Down);
             }
-            else if (state.IsKeyDown(Keys.Y))
+            if (state.IsKeyDown(Keys.Y))
             {
                 Fire(players[2]);
             }
@@ -371,7 +460,7 @@ namespace Tanks
             {
                 EvaulateMovement(players[3], DataTypes.Direction.Down);
             }
-            else if (state.IsKeyDown(Keys.O))
+            if (state.IsKeyDown(Keys.O))
             {
                 Fire(players[3]);
             }
