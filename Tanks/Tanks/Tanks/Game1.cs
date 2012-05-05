@@ -25,6 +25,7 @@ namespace Tanks
         private int screenWidth;
 
         private Texture2D bgTexture;
+        private Texture2D bgLogoTexture;
         private Texture2D tankTexture;
         private Texture2D treeTexture;
         private Texture2D stoneTexture;
@@ -58,10 +59,12 @@ namespace Tanks
         {
             // TODO: Add your initialization logic here
             // TODO: Add your initialization logic here
-            graphics.PreferredBackBufferWidth = 600;
+            graphics.PreferredBackBufferWidth = 800;
             graphics.PreferredBackBufferHeight = 600;
             graphics.PreferMultiSampling = false;
+            
             graphics.IsFullScreen = false;
+            
             graphics.ApplyChanges();
             Window.Title = "Tanks";
 
@@ -92,6 +95,7 @@ namespace Tanks
 
             // TODO: use this.Content to load your game content here
             bgTexture = Content.Load<Texture2D>("BACKGROUND");
+            bgLogoTexture = Content.Load<Texture2D>("LOGO");
             tankTexture = Content.Load<Texture2D>("Tank");
             treeTexture = Content.Load<Texture2D>("TREE");
             stoneTexture = Content.Load<Texture2D>("STONE");
@@ -438,7 +442,11 @@ namespace Tanks
         {
             var screenRectangle = new Rectangle(0, 0, screenHeight, screenHeight);
 
-            spriteBatch.Draw(bgTexture, screenRectangle, Color.White);            
+            spriteBatch.Draw(bgTexture, screenRectangle, Color.White);
+
+            var logoRectangle = new Rectangle(screenHeight, 0, screenWidth - screenHeight, screenHeight);
+
+            spriteBatch.Draw(bgLogoTexture, logoRectangle, Color.White);
         }
 
 
