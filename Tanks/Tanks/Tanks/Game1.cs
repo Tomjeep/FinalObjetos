@@ -58,8 +58,9 @@ namespace Tanks
         {
             // TODO: Add your initialization logic here
             // TODO: Add your initialization logic here
-            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferWidth = 600;
             graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferMultiSampling = false;
             graphics.IsFullScreen = false;
             graphics.ApplyChanges();
             Window.Title = "Tanks";
@@ -72,7 +73,7 @@ namespace Tanks
             gameMatrix = new TerrainCell[matrixLastCell+1,matrixLastCell+1];
             imagesRatio = 30;
 
-            numberOfPlayers = 4;
+            numberOfPlayers = 2;
             InitializePlayers();
             GenerateTerrain();
             
