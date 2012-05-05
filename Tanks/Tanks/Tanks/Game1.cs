@@ -335,7 +335,7 @@ namespace Tanks
         /// </summary>
         private void DrawScenery()
         {
-            var screenRectangle = new Rectangle(0, 0, screenWidth, screenHeight);
+            var screenRectangle = new Rectangle(0, 0, screenHeight, screenHeight);
 
             spriteBatch.Draw(bgTexture, screenRectangle, Color.White);            
         }
