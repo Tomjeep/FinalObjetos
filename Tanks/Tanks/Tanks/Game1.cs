@@ -394,8 +394,10 @@ namespace Tanks
         {
             foreach (var player in players)
             {
-                if (row == player.Row && column == player.Column)
-                    return true;
+                for (int r = player.Row - 1; r <= player.Row + 1; r++)
+                    for (int c = player.Column - 1; c <= player.Column + 1; c++)
+                        if (row == r && column == c)
+                            return true;
             }
             return false;
         }
