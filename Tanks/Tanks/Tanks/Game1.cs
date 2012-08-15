@@ -134,7 +134,7 @@ namespace Tanks
 
             ReadKeyboard();
 
-            BulletHits();
+            BulletsMovement();
 
             base.Update(gameTime);
         }
@@ -540,7 +540,7 @@ namespace Tanks
 
         #region bullets
 
-        private void BulletHits()
+        private void BulletsMovement()
         {
             foreach (var player in players)
             {
